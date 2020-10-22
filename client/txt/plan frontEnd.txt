@@ -1,0 +1,38 @@
+// create routs in the app {
+    Home
+    QuestionsContainer
+    LevelTwo
+    LevelThree
+    scores
+}
+
+Home{
+    container => input + button
+    input => have name from the cliant
+    optionBox => levels
+    button { 
+        send name to the db
+        link to the level pag
+        }
+
+}
+
+share componant{
+    form Questions is the same in the three levels
+    
+}
+
+LevelTwo {
+    same Level One but more difficulty
+}
+
+LevelThree{
+    Questions
+    counter if you lose or time restart again
+}
+
+scores{
+  give playlist in order
+  list
+  button => restart
+}

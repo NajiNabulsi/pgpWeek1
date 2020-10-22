@@ -1,0 +1,18 @@
+Schemas{
+    players schema
+    level 2 questions 
+    level 3 questions
+}
+
+controller{
+    middleware function
+    shar function
+}
+
+API{
+    "/api/level-two"
+    "/api/getAnswer-levelTwo"
+    "/api/level-three"
+    "/api/getAnswer-levelthree"
+    "/api/players"
+}

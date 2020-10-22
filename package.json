@@ -1,0 +1,21 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "author": "Naji",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "favicons": "^6.2.0",
+    "mongoose": "^5.10.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
