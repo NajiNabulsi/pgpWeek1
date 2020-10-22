@@ -1,0 +1,30 @@
+/* .lt-main {
+  /* display: flex; */
+/* align-items: baseline; */
+/* justify-content: center; */
+/* justify-content: space-between; */
+/* }  */
+
+.lt-container {
+  width: 40%;
+  height: auto;
+  padding: 20px;
+}
+
+.submit {
+  margin: 20px;
+}
+.submit:hover {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+.questions_container {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,16 +1,17 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./QuestionsContainer.css";
-import QuestionsTitle from "./QuestionsTitle";
-import InputAnswer from "./InputAnswer";
+// import "../componant/QuestionsContainer.css";
+import QuestionsTitle from "../componant/QuestionsTitle";
+import InputAnswer from "../componant/InputAnswer";
 import InputSubmit from "../componant/InputSubmit";
-import ScoreBord from "./ScoreBord";
+import ScoreBord from "../componant/ScoreBord";
 import useFetch from "../utilities/useFetch";
 import right from "../img/right.gif";
 import losGif from "../img/wrongAnswer.gif";
 import winPhoto from "../img/win.gif";
 import wrongAnswerPhoto from "../img/wrong.gif";
+import Card from "../componant/Card";
 
-const QuestionsContainer = () => {
+const LevelTwo = () => {
   const [getQuestionsData, setQuestionsData] = useState({});
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState();
@@ -24,6 +25,11 @@ const QuestionsContainer = () => {
 
   const input = useRef();
   const { isLoading, error, clearError, sendRequest } = useFetch();
+  const url = "http://localhost:5000";
+  const urlQuestion = `${url}/api/levl-two`;
+  const urlSendQuestion = `http://localhost:5000/api/leveltwo-answer`;
+
+  const urlGetAnswer = `${url}`;
 
   const fetchQuestion = async (url) => {
     const data = await sendRequest(url);
@@ -31,7 +37,7 @@ const QuestionsContainer = () => {
   };
 
   const postQuestion = async () => {
-    const url = "http://localhost:5000/api/get-answer";
+    const url = urlSendQuestion;
 
     const body = {
       _id: getQuestionsData[questionIndex]._id,
@@ -65,7 +71,7 @@ const QuestionsContainer = () => {
     }
   };
   useEffect(() => {
-    fetchQuestion("http://localhost:5000/api/questions");
+    fetchQuestion(urlQuestion);
   }, [questionIndex]);
 
   useEffect(() => {
@@ -151,20 +157,13 @@ const QuestionsContainer = () => {
                   value={answer}
                   ref={input}
                 />
-                {/* <input
-                  className="answer"
-                  type="text"
-                  onChange={changeHandler}
-                  value={answer}
-                  autoFocus
-                  ref={input}
-                /> */}
               </div>
               <InputSubmit onclick={submitHandler} />
             </>
           )
         )}
       </div>
+
       <div className="gif_container">
         {correct > wrong && gameOver && !gifWrong && !gifWrong && (
           <img src={winPhoto} alt="win" />
@@ -177,4 +176,4 @@ const QuestionsContainer = () => {
   );
 };
 
-export default QuestionsContainer;
+export default LevelTwo;

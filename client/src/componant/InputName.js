@@ -1,11 +1,11 @@
 import React from "react";
-import "./inputName.css";
-const InputAnswer = ({ onChange, value }) => {
+
+const InputName = ({ onChange, value }) => {
   return (
-    <div>
+    <div className="input-name">
       <input type="text" onChange={onChange} value={value} autoFocus />
     </div>
   );
 };
 
-export default InputAnswer;
+export default InputName;

@@ -1,0 +1,11 @@
+.radio-box_main {
+  font-size: 1.3rem;
+}
+
+.radio-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px;
+  justify-content: space-around;
+}

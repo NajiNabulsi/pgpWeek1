@@ -1,16 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./QuestionsContainer.css";
-import QuestionsTitle from "./QuestionsTitle";
-import InputAnswer from "./InputAnswer";
+import { useHistory } from "react-router-dom";
+
+import QuestionsTitle from "../componant/QuestionsTitle";
+import InputAnswer from "../componant/InputAnswer";
 import InputSubmit from "../componant/InputSubmit";
-import ScoreBord from "./ScoreBord";
+import ScoreBord from "../componant/ScoreBord";
 import useFetch from "../utilities/useFetch";
 import right from "../img/right.gif";
 import losGif from "../img/wrongAnswer.gif";
 import winPhoto from "../img/win.gif";
 import wrongAnswerPhoto from "../img/wrong.gif";
+import Counter from "../componant/Counter";
+import timeUp from "../img/time Up.jpg";
 
-const QuestionsContainer = () => {
+const LevelThree = () => {
+  const history = useHistory();
   const [getQuestionsData, setQuestionsData] = useState({});
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState();
@@ -21,6 +25,11 @@ const QuestionsContainer = () => {
   const [los, setLos] = useState("");
   const [gifCorrect, setGifCorrect] = useState(false);
   const [gifWrong, setGifWrong] = useState(false);
+  const [showCountDown, setShowCountDown] = useState(false);
+  const [start, setStart] = useState(false);
+
+  const urlLevlThree = "http://localhost:5000/api/three-two";
+  const urlGetAnswer = "http://localhost:5000/api/levelthree-answer";
 
   const input = useRef();
   const { isLoading, error, clearError, sendRequest } = useFetch();
@@ -28,11 +37,10 @@ const QuestionsContainer = () => {
   const fetchQuestion = async (url) => {
     const data = await sendRequest(url);
     setQuestionsData(data);
+    setStart(true);
   };
 
   const postQuestion = async () => {
-    const url = "http://localhost:5000/api/get-answer";
-
     const body = {
       _id: getQuestionsData[questionIndex]._id,
       num: getQuestionsData[questionIndex].Number,
@@ -47,7 +55,7 @@ const QuestionsContainer = () => {
     let getAnswer;
     try {
       getAnswer = await sendRequest(
-        url,
+        urlGetAnswer,
         request.method,
         request.body,
         request.headers
@@ -55,7 +63,6 @@ const QuestionsContainer = () => {
     } catch (err) {
       console.log("request not send", err);
     }
-
     if (getAnswer.answer === true) {
       setCorrect(correct + 1);
       setGifCorrect(true);
@@ -64,16 +71,33 @@ const QuestionsContainer = () => {
       setGifWrong(true);
     }
   };
+
   useEffect(() => {
-    fetchQuestion("http://localhost:5000/api/questions");
+    fetchQuestion(urlLevlThree);
   }, [questionIndex]);
 
   useEffect(() => {
     setTimeout(() => {
       setGifCorrect(false);
       setGifWrong(false);
+      // setStart(true);
     }, 1300);
   }, [correct, wrong]);
+
+  const tim = (t) => {
+    let x;
+    if (t === true) {
+      x = setTimeout(() => {
+        setShowCountDown(true);
+      }, 15000);
+    } else {
+      clearTimeout(x);
+    }
+  };
+
+  useEffect(() => {
+    tim(start);
+  }, [start]);
 
   const score = (num) => {
     if (parseInt(answer) === getQuestionsData[num].answer) {
@@ -84,12 +108,14 @@ const QuestionsContainer = () => {
       setLos(true);
     }
   };
+
   const changeHandler = (e) => {
     setAnswer(e.target.value);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
+    // setStart(false);
     postQuestion();
     if (questionIndex === getQuestionsData.length - 1) {
       setGameOver(true);
@@ -99,14 +125,10 @@ const QuestionsContainer = () => {
     score(questionIndex);
     addScore();
     setAnswer("");
-    // input.current.focus();
   };
 
   const restartHnadler = () => {
-    setQuestionIndex(0);
-    setGameOver(false);
-    setCorrect(0);
-    setWrong(0);
+    history.push("/");
   };
 
   const addScore = () => {
@@ -116,13 +138,17 @@ const QuestionsContainer = () => {
       setWin("You Lose");
     }
   };
-
+  console.log("getQuestionsData", getQuestionsData);
   return (
     <div className="main">
+      {!gameOver && !showCountDown && <Counter />}
       <div className="container">
         {isLoading && <div>LOADING ... </div>}
 
         {error && <div>SORRY SOMETHING WENT WRONG ... </div>}
+        {showCountDown && !gameOver && (
+          <img src={timeUp} alt="time up" onClick={restartHnadler} />
+        )}
 
         {gifCorrect && <img src={right} alt="correct" />}
 
@@ -138,7 +164,8 @@ const QuestionsContainer = () => {
         ) : (
           getQuestionsData.length &&
           !gifCorrect &&
-          !gifWrong && (
+          !gifWrong &&
+          !showCountDown && (
             <>
               <h1>Question{getQuestionsData[questionIndex].Number}</h1>
               <p>What is the result :</p>
@@ -151,14 +178,6 @@ const QuestionsContainer = () => {
                   value={answer}
                   ref={input}
                 />
-                {/* <input
-                  className="answer"
-                  type="text"
-                  onChange={changeHandler}
-                  value={answer}
-                  autoFocus
-                  ref={input}
-                /> */}
               </div>
               <InputSubmit onclick={submitHandler} />
             </>
@@ -177,4 +196,4 @@ const QuestionsContainer = () => {
   );
 };
 
-export default QuestionsContainer;
+export default LevelThree;

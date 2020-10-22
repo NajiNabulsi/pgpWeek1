@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "favicons": "^6.2.0",
     "mongoose": "^5.10.9"
   },
   "devDependencies": {
