@@ -66,6 +66,7 @@ const LevelThree = () => {
     if (getAnswer.answer === true) {
       setCorrect(correct + 1);
       setGifCorrect(true);
+      setQuestionIndex(questionIndex + 1);
     } else {
       setWrong(wrong + 1);
       setGifWrong(true);
@@ -96,7 +97,7 @@ const LevelThree = () => {
     if (t === true) {
       x = setTimeout(() => {
         setShowCountDown(true);
-      }, 15000);
+      }, 20000);
     } else {
       clearTimeout(x);
     }
