@@ -181,13 +181,13 @@ app.post("/api/player", async (req, res) => {
       if (err) {
         return res.status(500).json({ msg: "Sorry server error" });
       } else {
-        // return res.json({ msg: "your name has ben saved" });
         return res.json({ id: newPlayer._id, name: newPlayer.name });
       }
     });
   } catch (err) {
     console.log(err);
   }
+  // return res.json({ msg: "your name has ben saved" });
 });
 
 app.get("/api/players-list", async (req, res) => {
