@@ -69,11 +69,18 @@ const LevelThree = () => {
     } else {
       setWrong(wrong + 1);
       setGifWrong(true);
+      if (wrong === 2) {
+        setGameOver(true);
+      }
     }
   };
 
   useEffect(() => {
-    fetchQuestion(urlLevlThree);
+    if (questionIndex === getQuestionsData.length - 1) {
+      setGameOver(true);
+    } else {
+      fetchQuestion(urlLevlThree);
+    }
   }, [questionIndex]);
 
   useEffect(() => {
@@ -99,15 +106,15 @@ const LevelThree = () => {
     tim(start);
   }, [start]);
 
-  const score = (num) => {
-    if (parseInt(answer) === getQuestionsData[num].answer) {
-      setCorrect(correct.scor + 1);
-      setGifCorrect(true);
-    } else {
-      setWrong(wrong + 1);
-      setLos(true);
-    }
-  };
+  // const score = (num) => {
+  //   if (parseInt(answer) === getQuestionsData[num].answer) {
+  //     setCorrect(correct.scor + 1);
+  //     setGifCorrect(true);
+  //   } else {
+  //     setWrong(wrong + 1);
+  //     setLos(true);
+  //   }
+  // };
 
   const changeHandler = (e) => {
     setAnswer(e.target.value);
@@ -115,14 +122,8 @@ const LevelThree = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // setStart(false);
     postQuestion();
-    if (questionIndex === getQuestionsData.length - 1) {
-      setGameOver(true);
-    } else {
-      setQuestionIndex(questionIndex + 1);
-    }
-    score(questionIndex);
+
     addScore();
     setAnswer("");
   };
@@ -167,7 +168,10 @@ const LevelThree = () => {
           !gifWrong &&
           !showCountDown && (
             <>
-              <h1>Question{getQuestionsData[questionIndex].Number}</h1>
+              <h1>
+                Question {getQuestionsData[questionIndex].num} /
+                {getQuestionsData.length}
+              </h1>
               <p>What is the result :</p>
               <div className="questions_container">
                 <QuestionsTitle

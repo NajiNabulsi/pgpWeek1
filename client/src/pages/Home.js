@@ -44,9 +44,9 @@ const Home = () => {
     }
     setPlayer(play);
     if (play) {
-      quiz.push(`/:${play.id}/${level}`);
+      return quiz.push(`/${level}/:${play.id}`);
     }
-    console.log(play);
+    // return;
   };
 
   const levelOneChecked = (e) => {

@@ -59,13 +59,21 @@ const QuestionsContainer = () => {
     if (getAnswer.answer === true) {
       setCorrect(correct + 1);
       setGifCorrect(true);
+      setQuestionIndex(questionIndex + 1);
     } else {
       setWrong(wrong + 1);
       setGifWrong(true);
+      if (wrong === 2) {
+        setGameOver(true);
+      }
     }
   };
   useEffect(() => {
-    fetchQuestion("http://localhost:5000/api/questions");
+    if (questionIndex === getQuestionsData.length - 1) {
+      setGameOver(true);
+    } else {
+      fetchQuestion("http://localhost:5000/api/questions");
+    }
   }, [questionIndex]);
 
   useEffect(() => {
@@ -91,12 +99,12 @@ const QuestionsContainer = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     postQuestion();
-    if (questionIndex === getQuestionsData.length - 1) {
-      setGameOver(true);
-    } else {
-      setQuestionIndex(questionIndex + 1);
-    }
-    score(questionIndex);
+    // if (questionIndex === getQuestionsData.length - 1) {
+    //   setGameOver(true);
+    // } else {
+    //   setQuestionIndex(questionIndex + 1);
+    // }
+    // score(questionIndex);
     addScore();
     setAnswer("");
     // input.current.focus();
@@ -116,6 +124,8 @@ const QuestionsContainer = () => {
       setWin("You Lose");
     }
   };
+
+  console.log(getQuestionsData);
 
   return (
     <div className="main">
@@ -140,7 +150,10 @@ const QuestionsContainer = () => {
           !gifCorrect &&
           !gifWrong && (
             <>
-              <h1>Question{getQuestionsData[questionIndex].Number}</h1>
+              <h1>
+                Question {getQuestionsData[questionIndex].num} /{" "}
+                {getQuestionsData.length}
+              </h1>
               <p>What is the result :</p>
               <div className="questions_container">
                 <QuestionsTitle

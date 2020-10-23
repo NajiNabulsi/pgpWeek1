@@ -65,13 +65,21 @@ const LevelTwo = () => {
     if (getAnswer.answer === true) {
       setCorrect(correct + 1);
       setGifCorrect(true);
+      setQuestionIndex(questionIndex + 1);
     } else {
       setWrong(wrong + 1);
       setGifWrong(true);
+      if (wrong === 2) {
+        setGameOver(true);
+      }
     }
   };
   useEffect(() => {
-    fetchQuestion(urlQuestion);
+    if (questionIndex === getQuestionsData.length - 1) {
+      setGameOver(true);
+    } else {
+      fetchQuestion(urlQuestion);
+    }
   }, [questionIndex]);
 
   useEffect(() => {
@@ -81,15 +89,15 @@ const LevelTwo = () => {
     }, 1300);
   }, [correct, wrong]);
 
-  const score = (num) => {
-    if (parseInt(answer) === getQuestionsData[num].answer) {
-      setCorrect(correct.scor + 1);
-      setGifCorrect(true);
-    } else {
-      setWrong(wrong + 1);
-      setLos(true);
-    }
-  };
+  // const score = (num) => {
+  //   if (parseInt(answer) === getQuestionsData[num].answer) {
+  //     setCorrect(correct.scor + 1);
+  //     setGifCorrect(true);
+  //   } else {
+  //     setWrong(wrong + 1);
+  //     setLos(true);
+  //   }
+  // };
   const changeHandler = (e) => {
     setAnswer(e.target.value);
   };
@@ -97,12 +105,12 @@ const LevelTwo = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     postQuestion();
-    if (questionIndex === getQuestionsData.length - 1) {
-      setGameOver(true);
-    } else {
-      setQuestionIndex(questionIndex + 1);
-    }
-    score(questionIndex);
+    // if (questionIndex === getQuestionsData.length - 1) {
+    //   setGameOver(true);
+    // } else {
+    //   setQuestionIndex(questionIndex + 1);
+    // }
+    // score(questionIndex);
     addScore();
     setAnswer("");
     // input.current.focus();
@@ -146,7 +154,10 @@ const LevelTwo = () => {
           !gifCorrect &&
           !gifWrong && (
             <>
-              <h1>Question{getQuestionsData[questionIndex].Number}</h1>
+              <h1>
+                Question {getQuestionsData[questionIndex].num} /
+                {getQuestionsData.length}
+              </h1>
               <p>What is the result :</p>
               <div className="questions_container">
                 <QuestionsTitle
