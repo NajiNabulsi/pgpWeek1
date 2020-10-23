@@ -8,7 +8,7 @@ import Card from "../componant/Card";
 
 const Home = () => {
   const quiz = useHistory();
-  const { isLoading, error, clearError, sendRequest } = useFetch();
+  const { isLoading, error, sendRequest } = useFetch();
 
   const [input, setInput] = useState();
   const [player, setPlayer] = useState();
@@ -44,9 +44,8 @@ const Home = () => {
     }
     setPlayer(play);
     if (play) {
-      return quiz.push(`/${level}/:${play.id}`);
+      return quiz.push(`/${level}/${play.id}`);
     }
-    // return;
   };
 
   const levelOneChecked = (e) => {
@@ -60,9 +59,12 @@ const Home = () => {
         {error && <div>Sorry...</div>}
         <InputName onChange={changeHandler} />
         <OptionBox levelOneChecked={levelOneChecked} />
-        <button type="submit" onClick={clickHandler}>
-          Start
-        </button>
+        <div className="buttons">
+          <button type="submit" onClick={clickHandler}>
+            Start
+          </button>
+          <button onClick={() => quiz.push(`/score`)}>Scoues pag</button>
+        </div>
       </form>
     </Card>
   );

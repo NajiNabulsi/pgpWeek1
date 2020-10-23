@@ -13,7 +13,7 @@ import wrongAnswerPhoto from "../img/wrong.gif";
 import Counter from "../componant/Counter";
 import timeUp from "../img/time Up.jpg";
 
-const LevelThree = () => {
+const LevelThree = ({ match }) => {
   const history = useHistory();
   const [getQuestionsData, setQuestionsData] = useState({});
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -22,7 +22,6 @@ const LevelThree = () => {
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
   const [win, setWin] = useState("");
-  const [los, setLos] = useState("");
   const [gifCorrect, setGifCorrect] = useState(false);
   const [gifWrong, setGifWrong] = useState(false);
   const [showCountDown, setShowCountDown] = useState(false);
@@ -76,9 +75,35 @@ const LevelThree = () => {
     }
   };
 
+  const postPlayerScor = async () => {
+    const url = "http://localhost:5000/api/players-score";
+
+    const body = {
+      _id: match.params.uid,
+      finalScore: win,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const request = {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers,
+    };
+    let x;
+    try {
+      x = await sendRequest(url, request.method, request.body, request.headers);
+    } catch (err) {
+      console.log("Could not update player!", err);
+    }
+  };
+
   useEffect(() => {
     if (questionIndex === getQuestionsData.length - 1) {
       setGameOver(true);
+      postPlayerScor();
     } else {
       fetchQuestion(urlLevlThree);
     }
@@ -88,7 +113,6 @@ const LevelThree = () => {
     setTimeout(() => {
       setGifCorrect(false);
       setGifWrong(false);
-      // setStart(true);
     }, 1300);
   }, [correct, wrong]);
 
@@ -106,16 +130,6 @@ const LevelThree = () => {
   useEffect(() => {
     tim(start);
   }, [start]);
-
-  // const score = (num) => {
-  //   if (parseInt(answer) === getQuestionsData[num].answer) {
-  //     setCorrect(correct.scor + 1);
-  //     setGifCorrect(true);
-  //   } else {
-  //     setWrong(wrong + 1);
-  //     setLos(true);
-  //   }
-  // };
 
   const changeHandler = (e) => {
     setAnswer(e.target.value);

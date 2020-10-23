@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-// import "../componant/QuestionsContainer.css";
+import { useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 import QuestionsTitle from "../componant/QuestionsTitle";
 import InputAnswer from "../componant/InputAnswer";
 import InputSubmit from "../componant/InputSubmit";
@@ -9,9 +11,10 @@ import right from "../img/right.gif";
 import losGif from "../img/wrongAnswer.gif";
 import winPhoto from "../img/win.gif";
 import wrongAnswerPhoto from "../img/wrong.gif";
-import Card from "../componant/Card";
 
-const LevelTwo = () => {
+const LevelTwo = ({ match }) => {
+  const quiz = useHistory();
+
   const [getQuestionsData, setQuestionsData] = useState({});
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState();
@@ -19,21 +22,44 @@ const LevelTwo = () => {
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
   const [win, setWin] = useState("");
-  const [los, setLos] = useState("");
   const [gifCorrect, setGifCorrect] = useState(false);
   const [gifWrong, setGifWrong] = useState(false);
 
-  const input = useRef();
-  const { isLoading, error, clearError, sendRequest } = useFetch();
+  const { uid } = useParams();
+  const { isLoading, error, sendRequest } = useFetch();
+
   const url = "http://localhost:5000";
   const urlQuestion = `${url}/api/levl-two`;
   const urlSendQuestion = `http://localhost:5000/api/leveltwo-answer`;
 
-  const urlGetAnswer = `${url}`;
-
   const fetchQuestion = async (url) => {
     const data = await sendRequest(url);
     setQuestionsData(data);
+  };
+
+  const postPlayerScor = async () => {
+    const url = "http://localhost:5000/api/players-score";
+
+    const body = {
+      _id: match.params.uid,
+      finalScore: win,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const request = {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers,
+    };
+    let x;
+    try {
+      x = await sendRequest(url, request.method, request.body, request.headers);
+    } catch (err) {
+      console.log("Could not update player!", err);
+    }
   };
 
   const postQuestion = async () => {
@@ -77,6 +103,7 @@ const LevelTwo = () => {
   useEffect(() => {
     if (questionIndex === getQuestionsData.length - 1) {
       setGameOver(true);
+      postPlayerScor();
     } else {
       fetchQuestion(urlQuestion);
     }
@@ -89,15 +116,6 @@ const LevelTwo = () => {
     }, 1300);
   }, [correct, wrong]);
 
-  // const score = (num) => {
-  //   if (parseInt(answer) === getQuestionsData[num].answer) {
-  //     setCorrect(correct.scor + 1);
-  //     setGifCorrect(true);
-  //   } else {
-  //     setWrong(wrong + 1);
-  //     setLos(true);
-  //   }
-  // };
   const changeHandler = (e) => {
     setAnswer(e.target.value);
   };
@@ -105,15 +123,8 @@ const LevelTwo = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     postQuestion();
-    // if (questionIndex === getQuestionsData.length - 1) {
-    //   setGameOver(true);
-    // } else {
-    //   setQuestionIndex(questionIndex + 1);
-    // }
-    // score(questionIndex);
     addScore();
     setAnswer("");
-    // input.current.focus();
   };
 
   const restartHnadler = () => {
@@ -121,6 +132,8 @@ const LevelTwo = () => {
     setGameOver(false);
     setCorrect(0);
     setWrong(0);
+    postPlayerScor();
+    quiz.push(`/`);
   };
 
   const addScore = () => {
@@ -163,11 +176,7 @@ const LevelTwo = () => {
                 <QuestionsTitle
                   questionText={getQuestionsData[questionIndex].question}
                 />
-                <InputAnswer
-                  onChange={changeHandler}
-                  value={answer}
-                  ref={input}
-                />
+                <InputAnswer onChange={changeHandler} value={answer} />
               </div>
               <InputSubmit onclick={submitHandler} />
             </>

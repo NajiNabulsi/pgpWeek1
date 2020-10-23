@@ -1,3 +1,7 @@
 .fom-home {
   padding: 40px;
 }
+
+.buttons button {
+  margin: 5px;
+}

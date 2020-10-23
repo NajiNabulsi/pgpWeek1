@@ -1,4 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 import "./QuestionsContainer.css";
 import QuestionsTitle from "./QuestionsTitle";
 import InputAnswer from "./InputAnswer";
@@ -10,7 +13,9 @@ import losGif from "../img/wrongAnswer.gif";
 import winPhoto from "../img/win.gif";
 import wrongAnswerPhoto from "../img/wrong.gif";
 
-const QuestionsContainer = () => {
+const QuestionsContainer = ({ match }) => {
+  const quiz = useHistory();
+
   const [getQuestionsData, setQuestionsData] = useState({});
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState();
@@ -18,12 +23,12 @@ const QuestionsContainer = () => {
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
   const [win, setWin] = useState("");
-  const [los, setLos] = useState("");
   const [gifCorrect, setGifCorrect] = useState(false);
   const [gifWrong, setGifWrong] = useState(false);
 
-  const input = useRef();
-  const { isLoading, error, clearError, sendRequest } = useFetch();
+  //hooks
+  const { uid } = useParams();
+  const { isLoading, error, sendRequest } = useFetch();
 
   const fetchQuestion = async (url) => {
     const data = await sendRequest(url);
@@ -68,9 +73,36 @@ const QuestionsContainer = () => {
       }
     }
   };
+
+  const postPlayerScor = async () => {
+    const url = "http://localhost:5000/api/players-score";
+
+    const body = {
+      _id: match.params.uid,
+      finalScore: win,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const request = {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers,
+    };
+    let x;
+    try {
+      x = await sendRequest(url, request.method, request.body, request.headers);
+    } catch (err) {
+      console.log("Could not update player!", err);
+    }
+  };
+
   useEffect(() => {
     if (questionIndex === getQuestionsData.length - 1) {
       setGameOver(true);
+      postPlayerScor();
     } else {
       fetchQuestion("http://localhost:5000/api/questions");
     }
@@ -83,15 +115,6 @@ const QuestionsContainer = () => {
     }, 1300);
   }, [correct, wrong]);
 
-  const score = (num) => {
-    if (parseInt(answer) === getQuestionsData[num].answer) {
-      setCorrect(correct.scor + 1);
-      setGifCorrect(true);
-    } else {
-      setWrong(wrong + 1);
-      setLos(true);
-    }
-  };
   const changeHandler = (e) => {
     setAnswer(e.target.value);
   };
@@ -99,15 +122,8 @@ const QuestionsContainer = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     postQuestion();
-    // if (questionIndex === getQuestionsData.length - 1) {
-    //   setGameOver(true);
-    // } else {
-    //   setQuestionIndex(questionIndex + 1);
-    // }
-    // score(questionIndex);
     addScore();
     setAnswer("");
-    // input.current.focus();
   };
 
   const restartHnadler = () => {
@@ -115,6 +131,7 @@ const QuestionsContainer = () => {
     setGameOver(false);
     setCorrect(0);
     setWrong(0);
+    quiz.push(`/`);
   };
 
   const addScore = () => {
@@ -124,8 +141,6 @@ const QuestionsContainer = () => {
       setWin("You Lose");
     }
   };
-
-  console.log(getQuestionsData);
 
   return (
     <div className="main">
@@ -159,19 +174,7 @@ const QuestionsContainer = () => {
                 <QuestionsTitle
                   questionText={getQuestionsData[questionIndex].question}
                 />
-                <InputAnswer
-                  onChange={changeHandler}
-                  value={answer}
-                  ref={input}
-                />
-                {/* <input
-                  className="answer"
-                  type="text"
-                  onChange={changeHandler}
-                  value={answer}
-                  autoFocus
-                  ref={input}
-                /> */}
+                <InputAnswer onChange={changeHandler} value={answer} />
               </div>
               <InputSubmit onclick={submitHandler} />
             </>
