@@ -40,3 +40,6 @@ navigate to client file
 npm install
 npm start
 ```
+
+#see on heroku
+https://pgp-quiz.herokuapp.com
