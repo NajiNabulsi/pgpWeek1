@@ -5,6 +5,9 @@ const players = new Schema({
   name: {
     type: String,
   },
+  finalScore: {
+    type: String,
+  },
 });
 
 const Players = mongoose.model("players", players);

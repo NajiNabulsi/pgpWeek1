@@ -136,7 +136,7 @@ app.post("/api/levelthree-answer", async (req, res) => {
       if (err) {
         console.log(err);
       }
-      console.log("doc.answer", doc.answer);
+      // console.log("doc.answer", doc.answer);
       if (doc.answer === parseInt(answer)) {
         return res.json({ answer: true });
       } else {
@@ -212,6 +212,42 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
   });
 }
+
+app.post("/api/players-score", async (req, res) => {
+  const { _id, finalScore } = req.body;
+  console.log(_id, finalScore);
+  let findPlay;
+  try {
+    findPlay = await Players.findById(_id);
+  } catch (err) {
+    console.log(err);
+  }
+  // console.log(findPlay);
+  if (findPlay) {
+    console.log("findPlay", findPlay);
+  }
+  try {
+    await findPlay.updateOne({ finalScore: finalScore });
+  } catch (err) {
+    console.log(err);
+  }
+  return res.json({ msg: "players ben update" });
+});
+
+app.get("/api/player-score", async (req, res) => {
+  Players.find({}, (err, doc) => {
+    try {
+      if (err) {
+        throw Error;
+      } else {
+        res.json(doc);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  return;
+});
 
 const PORT = process.env.PORT || 5000;
 
