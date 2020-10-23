@@ -12,17 +12,22 @@ const app = express();
 app.use(enableCORS);
 app.use(express.json());
 
-app.get("/api/questions", (req, res) => {
-  Questions.find({}, function (err, doc) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(doc);
-    }
-  });
+app.get("/api/questions", async (req, res) => {
+  try {
+    Questions.find({}, function (err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        return res.json(doc);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return;
 });
 
-app.post("/api/get-answer", (req, res) => {
+app.post("/api/get-answer", async (req, res) => {
   const { _id, num, answer } = req.body;
   let checkAnswer;
   try {
@@ -32,9 +37,9 @@ app.post("/api/get-answer", (req, res) => {
       }
       // console.log("doc.answer", doc.answer);
       if (doc.answer === parseInt(answer)) {
-        res.json({ answer: true });
+        return res.json({ answer: true });
       } else {
-        res.json({ answer: false });
+        return res.json({ answer: false });
       }
     });
   } catch (err) {
@@ -43,40 +48,47 @@ app.post("/api/get-answer", (req, res) => {
   }
 });
 
-app.post("/api/post-Qustion", (req, res) => {
-  console.log("body", req.body);
+app.post("/api/post-Qustion", async (req, res) => {
   const data = req.body;
 
   const newQuestions = new Questions(data);
+  try {
+    newQuestions.save((err) => {
+      if (err) {
+        return res.status(500).json({ msg: "Sorry server error" });
+        console.log("err", err);
+      } else {
+        return res.json({
+          msg: "your data has ben save",
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
-  newQuestions.save((err) => {
-    if (err) {
-      res.status(500).json({ msg: "Sorry server error" });
-      console.log("err", err);
-    } else {
-      res.json({
-        msg: "your data has ben save",
-      });
-    }
-  });
-  res.json({ msg: "we receive your data" });
+  return res.json({ msg: "we receive your data" });
 });
 
 // lvel two API
 
-app.get("/api/levl-two", (req, res) => {
-  LevelTwo.find({}, function (err, doc) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(doc);
-    }
-  });
+app.get("/api/levl-two", async (req, res) => {
+  try {
+    LevelTwo.find({}, function (err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        return res.json(doc);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return;
 });
 
-app.post("/api/leveltwo-answer", (req, res) => {
+app.post("/api/leveltwo-answer", async (req, res) => {
   const { _id, num, answer } = req.body;
-  console.log("body backend", num, answer, _id);
 
   let checkAnswer;
   try {
@@ -86,32 +98,37 @@ app.post("/api/leveltwo-answer", (req, res) => {
       }
       console.log("doc.answer", doc.answer);
       if (doc.answer === parseInt(answer)) {
-        res.json({ answer: true });
+        return res.json({ answer: true });
       } else {
-        res.json({ answer: false });
+        return res.json({ answer: false });
       }
     });
   } catch (err) {
     console.log(err);
     return next(err);
   }
+  return;
 });
 
 // level three
 
-app.get("/api/three-two", (req, res) => {
-  LevelThree.find({}, function (err, doc) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(doc);
-    }
-  });
+app.get("/api/three-two", async (req, res) => {
+  try {
+    LevelThree.find({}, function (err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        return res.json(doc);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return;
 });
 
-app.post("/api/levelthree-answer", (req, res) => {
+app.post("/api/levelthree-answer", async (req, res) => {
   const { _id, num, answer } = req.body;
-  console.log("body backend", num, answer, _id);
 
   let checkAnswer;
   try {
@@ -121,60 +138,71 @@ app.post("/api/levelthree-answer", (req, res) => {
       }
       console.log("doc.answer", doc.answer);
       if (doc.answer === parseInt(answer)) {
-        res.json({ answer: true });
+        return res.json({ answer: true });
       } else {
-        res.json({ answer: false });
+        return res.json({ answer: false });
       }
     });
   } catch (err) {
     console.log(err);
     return next(err);
   }
+  // return;
 });
 
-app.post("/api/lvel-three", (req, res) => {
-  console.log("body", req.body);
+app.post("/api/lvel-three", async (req, res) => {
   const data = req.body;
 
   const newQuestions = new LevelThree(data);
-
-  newQuestions.save((err) => {
-    if (err) {
-      res.status(500).json({ msg: "Sorry server error" });
-      console.log("err", err);
-    } else {
-      res.json({
-        msg: "your data has ben save",
-      });
-    }
-  });
-  res.json({ msg: "we receive your lvel two data" });
+  try {
+    newQuestions.save((err) => {
+      if (err) {
+        return res.status(500).json({ msg: "Sorry server error" });
+      } else {
+        return res.json({
+          msg: "your data has ben save",
+        });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return res.json({ msg: "we receive your lvel two data" });
 });
 
 // players
 
-app.post("/api/player", (req, res) => {
+app.post("/api/player", async (req, res) => {
   const name = req.body;
-  console.log("player", name);
   const newPlayer = new Players(name);
-  newPlayer.save((err) => {
-    if (err) {
-      res.status(500).json({ msg: "Sorry server error" });
-    } else {
-      res.json({ msg: "your name has ben saved" });
-    }
-  });
-  res.json({ id: newPlayer._id, name: newPlayer.name });
+
+  try {
+    newPlayer.save((err) => {
+      if (err) {
+        return res.status(500).json({ msg: "Sorry server error" });
+      } else {
+        // return res.json({ msg: "your name has ben saved" });
+        return res.json({ id: newPlayer._id, name: newPlayer.name });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-app.get("/api/players-list", (req, res) => {
-  Players.find({}, (err, doc) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(doc);
-    }
-  });
+app.get("/api/players-list", async (req, res) => {
+  try {
+    Players.find({}, (err, doc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        return res.json(doc);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  return;
 });
 
 if (process.env.NODE_ENV === "production") {
