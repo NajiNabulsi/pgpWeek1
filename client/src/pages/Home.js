@@ -21,7 +21,7 @@ const Home = () => {
   const clickHandler = async (e) => {
     e.preventDefault();
 
-    const url = "http://localhost:5000/api/player";
+    const url = `${process.env.REACT_APP_BACKEND_URL}/player`;
     const body = {
       name: input,
     };

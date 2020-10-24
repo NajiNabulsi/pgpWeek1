@@ -30,7 +30,7 @@ const LevelTwo = ({ match }) => {
 
   const url = "http://localhost:5000";
   const urlQuestion = `${url}/api/levl-two`;
-  const urlSendQuestion = `http://localhost:5000/api/leveltwo-answer`;
+  const urlSendQuestion = `${process.env.REACT_APP_BACKEND_URL}/leveltwo-answer`;
 
   const fetchQuestion = async (url) => {
     const data = await sendRequest(url);
@@ -38,7 +38,7 @@ const LevelTwo = ({ match }) => {
   };
 
   const postPlayerScor = async () => {
-    const url = "http://localhost:5000/api/players-score";
+    const url = `${process.env.REACT_APP_BACKEND_URL}/players-score`;
 
     const body = {
       _id: match.params.uid,

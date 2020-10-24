@@ -27,8 +27,8 @@ const LevelThree = ({ match }) => {
   const [showCountDown, setShowCountDown] = useState(false);
   const [start, setStart] = useState(false);
 
-  const urlLevlThree = "http://localhost:5000/api/three-two";
-  const urlGetAnswer = "http://localhost:5000/api/levelthree-answer";
+  const urlLevlThree = `${process.env.REACT_APP_BACKEND_URL}/three-two`;
+  const urlGetAnswer = `${process.env.REACT_APP_BACKEND_URL}/levelthree-answer`;
 
   const input = useRef();
   const { isLoading, error, clearError, sendRequest } = useFetch();
@@ -76,7 +76,7 @@ const LevelThree = ({ match }) => {
   };
 
   const postPlayerScor = async () => {
-    const url = "http://localhost:5000/api/players-score";
+    const url = `${process.env.REACT_APP_BACKEND_URL}/players-score`;
 
     const body = {
       _id: match.params.uid,

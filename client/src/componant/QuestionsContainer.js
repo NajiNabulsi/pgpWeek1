@@ -36,7 +36,7 @@ const QuestionsContainer = ({ match }) => {
   };
 
   const postQuestion = async () => {
-    const url = "http://localhost:5000/api/get-answer";
+    const url = `${process.env.REACT_APP_BACKEND_URL}/get-answer`;
 
     const body = {
       _id: getQuestionsData[questionIndex]._id,
@@ -75,7 +75,7 @@ const QuestionsContainer = ({ match }) => {
   };
 
   const postPlayerScor = async () => {
-    const url = "http://localhost:5000/api/players-score";
+    const url = `${process.env.REACT_APP_BACKEND_URL}/players-score`;
 
     const body = {
       _id: match.params.uid,
@@ -104,7 +104,7 @@ const QuestionsContainer = ({ match }) => {
       setGameOver(true);
       postPlayerScor();
     } else {
-      fetchQuestion("http://localhost:5000/api/questions");
+      fetchQuestion(`${process.env.REACT_APP_BACKEND_URL}/questions`);
     }
   }, [questionIndex]);
 
