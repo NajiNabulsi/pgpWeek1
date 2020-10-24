@@ -27,11 +27,11 @@ const LevelThree = ({ match }) => {
   const [showCountDown, setShowCountDown] = useState(false);
   const [start, setStart] = useState(false);
 
-  const urlLevlThree = `${process.env.REACT_APP_BACKEND_URL}/three-two`;
+  const urlLevlThree = `${process.env.REACT_APP_BACKEND_URL}/levelthree`;
   const urlGetAnswer = `${process.env.REACT_APP_BACKEND_URL}/levelthree-answer`;
 
   const input = useRef();
-  const { isLoading, error, clearError, sendRequest } = useFetch();
+  const { isLoading, error, sendRequest } = useFetch();
 
   const fetchQuestion = async (url) => {
     const data = await sendRequest(url);

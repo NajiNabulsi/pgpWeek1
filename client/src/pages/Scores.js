@@ -6,7 +6,7 @@ import "./scores.css";
 const Scores = () => {
   const { isLoading, error, sendRequest } = useFetch();
 
-  const url = `${process.env.REACT_APP_BACKEND_URL}/player-score`;
+  const url = `${process.env.REACT_APP_BACKEND_URL}/players-list`;
 
   const [list, setList] = useState([]);
 

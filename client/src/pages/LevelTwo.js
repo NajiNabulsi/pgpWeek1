@@ -28,8 +28,8 @@ const LevelTwo = ({ match }) => {
   const { uid } = useParams();
   const { isLoading, error, sendRequest } = useFetch();
 
-  const url = "http://localhost:5000";
-  const urlQuestion = `${url}/api/levl-two`;
+  const url = `${process.env.REACT_APP_BACKEND_URL}`;
+  const urlQuestion = `${url}/levl-two`;
   const urlSendQuestion = `${process.env.REACT_APP_BACKEND_URL}/leveltwo-answer`;
 
   const fetchQuestion = async (url) => {

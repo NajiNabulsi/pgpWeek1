@@ -112,7 +112,7 @@ app.post("/api/leveltwo-answer", async (req, res) => {
 
 // level three
 
-app.get("/api/three-two", async (req, res) => {
+app.get("/api/levelthree", async (req, res) => {
   try {
     LevelThree.find({}, function (err, doc) {
       if (err) {
